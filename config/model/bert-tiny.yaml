@@ -1,0 +1,24 @@
+
+
+name: PlanT
+
+training:
+  max_epochs: 50
+  batch_size: 32
+  learning_rate: 1e-4
+  betas: [0.9, 0.95]
+  grad_norm_clip: 1.0
+  weight_decay: 0.1 # only applied on matmul weights
+  ckpt_path: log/
+  num_workers: 12 # for DataLoader
+  pred_len: 4
+  seq_len: 1
+  max_NextRouteBBs: 2 # max 10 prevents really high ids if route is long
+  input_ego: False
+  remove_velocity: None # input
+  route_only_wp: False # True
+  remove_back: False
+  pretraining_path: none
+pretrained_model: prajjwal1/bert-tiny #prajjwal1/bert-tiny, prajjwal1/bert-mini, prajjwal1/bert-small, prajjwal1/bert-medium
+num_labels: 1
+input_size: 12

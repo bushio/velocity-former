@@ -1,0 +1,14 @@
+defaults:
+  - model: bert-tiny
+  - dataset: trajectory_vel
+exp_folder_name: training
+aicallenge_dir: /home/satoshi/aichallenge2023-racing/docker/aichallenge/
+hydra:
+  run:
+    dir: outputs/${exp_folder_name}/${now:%Y-%m-%d_%H-%M-%S}
+save_dir: ${hydra:run.dir}
+ckpt: 
+batch_size: 64
+lr: 1e-4
+epocs: 1000
+

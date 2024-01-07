@@ -1,0 +1,20 @@
+root_dir:  ${aicallenge_dir}/Datasets/
+train_dir:
+  - NonReset/0001
+  - NonReset/0002
+  - NonReset/0003
+  - NonReset/0004
+test_dir:
+  - NonReset/0005
+control_dir: control
+traj_dir: trajectory
+path_dir: path
+pose_dir: pose
+object_dir: objects
+
+trajectory:
+  minimum_num: 150 # １データあたりの最低のポイント数（これ以下のポイント数の場合無効とする）
+  interval: 10 #ロードするpoint の間隔（点の数）
+  point_num: 12 #1データあたりのポイント数。 interval * point_num < minimum_num にしてください。
+  mode: "degree" # 座標データ(2次元)から1次元への変換方法
+  dtype: "int32" # データのフォーマット
