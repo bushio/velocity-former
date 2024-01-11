@@ -18,9 +18,10 @@ def main(cfg):
         save_weights_only=True,
         dirpath='model/',
     )
-    
+    # 自作データオーグメンテーション
     augumentation = CustomDataAugumentation()
 
+    # データローダーを作成
     train_dataset = Trajectory_and_Velocity(cfg.dataset, mode="train", transform=augumentation)
     test_dataset = Trajectory_and_Velocity(cfg.dataset, mode="test")
 
@@ -34,7 +35,11 @@ def main(cfg):
         max_epochs=cfg.epocs,
         callbacks = [checkpoint]
     )
+    # 学習を実行
     trainer.fit(model, train_data_loader, test_data_loader)
+
+    # テストを実行
     test = trainer.test(dataloaders=test_data_loader)
+    
 if __name__ == "__main__":
     main()

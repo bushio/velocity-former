@@ -86,18 +86,14 @@ class Trajectory_and_Velocity(Dataset):
                     interval: int = 10,
                     minimum_num: int = 150,
                     point_num: int= 10,
-                    dtype="float16"
+                    dtype="int32"
                     ):
 
         # 出力するフォーマットを指定
-        if dtype =="float32":
-             dtype=np.float32
-        elif dtype =="int16":
+        if dtype =="int16":
              dtype=np.int16
-        elif dtype =="int32":
-             dtype=np.int32
         else:
-            dtype=np.float16
+             dtype=np.int32
         
         if len(traj) < minimum_num:
             return None
@@ -114,7 +110,6 @@ class Trajectory_and_Velocity(Dataset):
             points.append(traj[index - interval][0:2]) # For debug
         #print(degrees) # For debug
         #plot_point(points) # For debug
-        
         return np.array(degrees, dtype=dtype)
 
 # 2つのベクトルの角度を算出する
