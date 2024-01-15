@@ -1,6 +1,6 @@
 name: bert-tiny
 pretrained_model: prajjwal1/bert-tiny #prajjwal1/bert-tiny, prajjwal1/bert-mini, prajjwal1/bert-small, prajjwal1/bert-medium
 num_labels: 1
-label_type: "velocity"
+label_type: "steering"
 input_size: 12
 lr: 1e-4

@@ -9,6 +9,6 @@ hydra:
 save_dir: ${hydra:run.dir}
 ckpt: 
 batch_size: 64
-lr: 1e-4
+
 epocs: 1000
 

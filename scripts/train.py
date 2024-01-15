@@ -8,7 +8,7 @@ import pytorch_lightning as pl
 
 @hydra.main(config_path=f"../config", config_name="config")
 def main(cfg):
-    model = VelocityFormer(cfg.model, lr=cfg.lr)
+    model = VelocityFormer(cfg.model, lr=cfg.model.lr)
     
     # 学習時にモデルの重みを保存する条件を指定
     checkpoint = pl.callbacks.ModelCheckpoint(
@@ -17,13 +17,19 @@ def main(cfg):
         save_top_k=1,
         save_weights_only=True,
         dirpath='model/',
+        filename='{epoch}_{train_loss:.2f}'
     )
     # 自作データオーグメンテーション
-    augumentation = CustomDataAugumentation()
+    augumentation = CustomDataAugumentation(label_type=cfg.model.label_type)
 
     # データローダーを作成
-    train_dataset = Trajectory_and_Velocity(cfg.dataset, mode="train", transform=augumentation)
-    test_dataset = Trajectory_and_Velocity(cfg.dataset, mode="test")
+    train_dataset = Trajectory_and_Velocity(cfg.dataset, 
+                                            mode="train", 
+                                            transform=augumentation, 
+                                            label_type=cfg.model.label_type)
+    test_dataset = Trajectory_and_Velocity(cfg.dataset, 
+                                           mode="test",
+                                           label_type=cfg.model.label_type)
 
     train_data_loader = DataLoader(dataset=train_dataset, batch_size=cfg.batch_size, shuffle=True)
     test_data_loader = DataLoader(dataset=test_dataset, batch_size=cfg.batch_size, shuffle=False)

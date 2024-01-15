@@ -11,10 +11,15 @@ logger = logging.getLogger(__name__)
 
 
 class Trajectory_and_Velocity(Dataset):
-    def __init__(self, cfg, mode="train", transform=None):
+    def __init__(self, cfg, mode="train", transform=None, label_type="velocity"):
         self.root_dir = cfg.root_dir
         self.traj_dir = cfg.traj_dir
         self.control_dir = cfg.control_dir
+
+        self.label_type = label_type
+        self.wheel_base = 2.9718
+        self.max_steering = 200
+        self.min_steering = -200
         self.data_dir = []
 
         if mode=="train":
@@ -29,6 +34,7 @@ class Trajectory_and_Velocity(Dataset):
         logger.info("Data num: {}".format(self.__len__()))
         
         self.transform = transform
+        
     
     def __getitem__(self, index):
         sample = self.dataset_for_loader[index]
@@ -66,19 +72,24 @@ class Trajectory_and_Velocity(Dataset):
                     continue
                 
                 # 制御コマンドを1次元ベクトルに変換
-                velocity = self._parse_velocity(control)
+                label = self._parse_velocity(control, label_type=self.label_type)
 
                 sample["data"] = torch.from_numpy(traj)
-                sample["label"] = torch.from_numpy(velocity)
+                sample["label"] = torch.from_numpy(label)
                 
                 dataset_for_loader.append(sample)
         return dataset_for_loader
 
     # 制御コマンドデータを速度のベクトルに変換する
-    def _parse_velocity(self, control, mode="regression"):
+    def _parse_velocity(self, control, label_type="velocity"):
         # 回帰問題として速度の値を出力させる場合
-        if mode == "regression":
+        if label_type == "velocity":
             return np.array([int(control[0])], np.float32)
+
+        elif label_type == "steering":
+            label = control[2]* 360.0 * self.wheel_base
+            label =min(max(label, self.min_steering), self.max_steering)
+            return np.array([label], np.float32)
 
     # Trajectory points を1次元のベクトルに変換する
     def _parse_traj(self, traj: np.array,

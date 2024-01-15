@@ -15,13 +15,20 @@ def main(cfg):
     if ckpt is None:
         print("Please set traied mode as ckpt.")
         exit()
-    model = VelocityFormer(cfg.model, lr=cfg.lr)
+    # モデルロード
+    model = VelocityFormer(cfg.model, lr=cfg.model.lr)
     model = model.load_from_checkpoint(ckpt)
-    test_dataset = Trajectory_and_Velocity(cfg.dataset, mode="test")
+
+    # テスト用データセットロード
+    test_dataset = Trajectory_and_Velocity(cfg.dataset, 
+                                           mode="test", 
+                                           label_type=cfg.model.label_type)
     test_data_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=False)
+
+    # 推論結果と教師ラベルを出力
     for x in test_data_loader:
         output = model(x["data"])
-        print(output[0], x["label"])
+        print(output[0], x["label"], (output[0]-x["label"]))
 
 if __name__ == "__main__":
     main()
