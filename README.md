@@ -83,3 +83,7 @@ python scripts/export_onnx.py ckpt={/path/to/trained_ckpt}
 python scripts/export_onnx.py ckpt={/path/to/trained_ckpt} model=bert-tiny_steering
 ```
 
+# モデルアーキテクチャ
+使用するモデルの構造は以下のようになります。
+- BERT-Tiny
+![architecture](docs/velocity_transformer.png)
