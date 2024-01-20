@@ -15,13 +15,16 @@ def main(cfg):
     if ckpt is None:
         print("Please set traied mode as ckpt.")
         exit()
-    model = VelocityFormer(cfg.model, lr=cfg.lr)
+    model = VelocityFormer(cfg.model, lr=cfg.model.lr)
     model = model.load_from_checkpoint(ckpt)
     test_dataset = Trajectory_and_Velocity(cfg.dataset, mode="test")
     test_data_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=False)
     iterator = iter(test_data_loader)
     x = next(iterator)
     input_sample = x["data"]
-    model.to_onnx("model.onnx", input_sample, export_params=True)
+
+    filename = os.path.splitext(os.path.basename(ckpt))[0] + ".onnx"
+    filename = filename.replace("=", "_")
+    model.to_onnx(filename, input_sample, export_params=True)
 if __name__ == "__main__":
     main()
